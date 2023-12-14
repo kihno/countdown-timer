@@ -1,19 +1,14 @@
 import { useEffect, useRef, useState } from "react";
+import './App.css';
 
 const CountdownTimer = () => {
   // New Date(year, monthIndex, day, hours, minutes)
   const fiveMinutes = new Date(0, 0, 0, 0, 5);
-  const [timeRemaining, setTimeRemaining] = useState(fiveMinutes);
+  const tenMinutes = new Date(0, 0, 0, 0, 10);
+  const fifteenMinutes = new Date(0, 0, 0, 0, 15);
+  const [time, setTime] = useState(fiveMinutes)
+  const [timeRemaining, setTimeRemaining] = useState(time);
   const intervalId = useRef<number | null>(null);
-
-  // Clear the interval on unmount
-  useEffect(() => {
-    return () => {
-      if (intervalId.current !== null) {
-        clearInterval(intervalId.current);
-      }
-    }
-  }, []);
 
   const formatDate = (dateObject) => {
     // Get minutes and seconds
@@ -35,9 +30,9 @@ const CountdownTimer = () => {
 
     intervalId.current = window.setInterval(() => {
       setTimeRemaining(
-        (prevTimeRemaining) => new Date(prevTimeRemaining.getTime() - 1000)
+        (prevTimeRemaining) => new Date(prevTimeRemaining.getTime() - 10)
       )
-    }, 1000);
+    }, 10);
   };
 
   const handleClickStop = () => {
@@ -55,16 +50,59 @@ const CountdownTimer = () => {
     if (intervalId.current !== null) {
       clearInterval(intervalId.current);
     }
+    setTimeRemaining(time);
+  }
+
+  const handleClickFiveMinutes = () => {
+    if (intervalId.current !== null) {
+      clearInterval(intervalId.current);
+      intervalId.current = null;
+    }
+
     setTimeRemaining(fiveMinutes);
   }
 
+  const handleClickTenMinutes = () => {
+    if (intervalId.current !== null) {
+      clearInterval(intervalId.current);
+      intervalId.current = null;
+    }
+
+    setTimeRemaining(tenMinutes);
+  }
+
+  const handleClickFifteenMinutes = () => {
+    if (intervalId.current !== null) {
+      clearInterval(intervalId.current);
+      intervalId.current = null;
+    }
+
+    setTimeRemaining(fifteenMinutes);
+  }
+
+  // Clear the interval on unmount
+  useEffect(() => {
+    return () => {
+      if (intervalId.current !== null) {
+        clearInterval(intervalId.current);
+      }
+    }
+  }, []);
+
   return(
-    <div>
-      <h1>{formatDate(timeRemaining)}</h1>
+    <div className="container">
+      <div className="clockContainer">
       <div>
-        <button onClick={handleClickStart}>Start</button>
-        <button onClick={handleClickStop}>Stop</button>
-        <button onClick={handleReset}>Reset</button>
+          <button onClick={handleClickFiveMinutes}>5 Minutes</button>
+          <button onClick={handleClickTenMinutes}>10 Minutes</button>
+          <button onClick={handleClickFifteenMinutes}>15 Minutes</button>
+        </div>
+        <h1>{formatDate(timeRemaining)}</h1>
+        <div>
+          <button onClick={handleClickStart}>Start</button>
+          <button onClick={handleClickStop}>Stop</button>
+          <button onClick={handleReset}>Reset</button>
+        </div>
       </div>
     </div>
   )
